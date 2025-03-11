@@ -13,6 +13,7 @@ export interface BidProps {
   createdAt: Date;
   endTime?: Date;
   acceptedBy?: string;
+  actionButtons?: React.ReactNode; // Added this prop to fix the TypeScript error
   onAccept?: (id: string) => void;
   onConfirmPayment?: (id: string) => void;
 }
@@ -25,6 +26,7 @@ const BidCard = ({
   createdAt,
   endTime,
   acceptedBy,
+  actionButtons,
   onAccept,
   onConfirmPayment
 }: BidProps) => {
@@ -112,7 +114,14 @@ const BidCard = ({
         </div>
       )}
 
-      {status === 'pending' && onAccept && (
+      {/* Render action buttons if provided */}
+      {actionButtons && (
+        <div className="mt-4">
+          {actionButtons}
+        </div>
+      )}
+
+      {status === 'pending' && onAccept && !actionButtons && (
         <Button 
           onClick={() => onAccept(id)} 
           className="w-full"
@@ -122,7 +131,7 @@ const BidCard = ({
         </Button>
       )}
 
-      {status === 'pending' && acceptedBy && onConfirmPayment && (
+      {status === 'pending' && acceptedBy && onConfirmPayment && !actionButtons && (
         <div>
           <div className="bg-amber-50 p-3 rounded-lg mb-4 flex items-center">
             <AlertCircle className="text-amber-500 mr-2 h-4 w-4" />

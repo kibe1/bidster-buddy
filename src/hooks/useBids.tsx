@@ -48,6 +48,33 @@ const adminUser: User = {
   isAdmin: true,
 };
 
+// Mock users list
+const mockUsers: User[] = [
+  currentUser,
+  adminUser,
+  {
+    id: 'user-2',
+    name: 'Jane Smith',
+    email: 'jane@example.com',
+    phone: '+1122334455',
+    isAdmin: false,
+  },
+  {
+    id: 'user-3',
+    name: 'Bob Johnson',
+    email: 'bob@example.com',
+    phone: '+5566778899',
+    isAdmin: false,
+  },
+  {
+    id: 'user-4',
+    name: 'Alice Brown',
+    email: 'alice@example.com',
+    phone: '+9988776655',
+    isAdmin: false,
+  }
+];
+
 // Initial mock bids
 const initialBids: Bid[] = [
   {
@@ -100,6 +127,8 @@ export const useBids = () => {
   const [bids, setBids] = useState<Bid[]>(initialBids);
   const [allocation, setAllocation] = useState<BidAllocation>(initialAllocation);
   const [user] = useState<User>(currentUser);
+  const [loading, setLoading] = useState<boolean>(false);
+  const users = mockUsers; // Make mock users available
 
   // Calculate interest based on duration
   const calculateInterest = (duration: 24 | 48 | 72): number => {
@@ -192,11 +221,17 @@ export const useBids = () => {
       return;
     }
     
-    setAllocation(newAllocation);
-    toast({
-      title: "Allocation Updated",
-      description: "Bid allocation has been updated successfully.",
-    });
+    setLoading(true);
+    
+    // Simulate API call delay
+    setTimeout(() => {
+      setAllocation(newAllocation);
+      setLoading(false);
+      toast({
+        title: "Allocation Updated",
+        description: "Bid allocation has been updated successfully.",
+      });
+    }, 500);
   };
 
   // Get user bids
@@ -221,8 +256,10 @@ export const useBids = () => {
 
   return {
     user,
+    users,
     bids,
     allocation,
+    loading,
     placeBid,
     acceptBid,
     confirmPayment,

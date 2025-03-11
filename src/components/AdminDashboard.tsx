@@ -13,10 +13,10 @@ import BidCard from '@/components/BidCard';
 import { Users, Clock, Settings, Activity } from 'lucide-react';
 
 const AdminDashboard = () => {
-  const { bids, users, setBidAllocation, loading } = useBids();
-  const [morningAllocation, setMorningAllocation] = useState(10);
-  const [afternoonAllocation, setAfternoonAllocation] = useState(10);
-  const [eveningAllocation, setEveningAllocation] = useState(10);
+  const { bids, users, setBidAllocation, loading, allocation } = useBids();
+  const [morningAllocation, setMorningAllocation] = useState(allocation.morning);
+  const [afternoonAllocation, setAfternoonAllocation] = useState(allocation.afternoon);
+  const [eveningAllocation, setEveningAllocation] = useState(allocation.evening);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   const pendingBids = bids.filter(bid => bid.status === 'pending');
@@ -30,9 +30,14 @@ const AdminDashboard = () => {
   
   const handleUpdateAllocations = async () => {
     try {
-      await setBidAllocation(morningAllocation, afternoonAllocation, eveningAllocation);
+      const newAllocation = {
+        morning: morningAllocation,
+        afternoon: afternoonAllocation,
+        evening: eveningAllocation
+      };
+      
+      setBidAllocation(newAllocation);
       setIsDialogOpen(false);
-      toast.success('Bid allocations updated successfully!');
     } catch (error) {
       toast.error('Failed to update allocations. Please try again.');
     }
